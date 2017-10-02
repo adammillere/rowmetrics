@@ -1,0 +1,35 @@
+countPath: /usr/local/go/src/github.com/adammillere/rowmetrics/examples/counts.example.yml
+aws:
+  region: us-east-1
+  accessKeyId: ABCD1234EFGH5678IJKL
+  secretAccessKey: 5PKPu67Yev4+iak7kNBoLSjbZH7Buw78AskzE4iZ
+  namespace: RowMetrics
+databases:
+  - name: mysql-database
+    host: 127.0.0.1:3306
+    type: mysql
+    database: company
+    schema: company
+    user: admin
+    password: j4QPGtX485L9BhRM
+    tables:
+      increment:
+        - Transaction
+        - Sale
+      row:
+        - Product
+        - Client
+  - name: postgres-database
+    host: 127.0.0.1:5432
+    type: postgres
+    database: company
+    schema: public
+    user: admin
+    password: j4QPGtX485L9BhRM
+    tables:
+      increment:
+        - Transaction
+        - Sale
+      row:
+        - Product
+        - Client

@@ -1,0 +1,14 @@
+mysql-database:
+  increment:
+    Transaction: 41867
+    Sale: 26
+  row:
+    Product: 48
+    Client: 149
+postgres-database:
+  increment:
+    Transaction: 41867
+    Sale: 26
+  row:
+    Product: 48
+    Client: 149
