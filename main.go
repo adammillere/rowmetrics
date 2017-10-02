@@ -372,68 +372,73 @@ func getCountCollection(dbConfig databaseConfig) (countCollection, error) {
 		}
 	}
 
-	// Query for all of the auto increment tables
-	rows, err := db.Query(incrementQuery, incrementArgs...)
-	if err != nil {
-		log.Printf("ERROR: Failed to query database %s: %s", dbConfig.Name, err)
-	} else {
-		defer rows.Close()
+	if incrementQuery != "" && len(incrementArgs) > 0 {
+		// Query for all of the auto increment tables
+		rows, err := db.Query(incrementQuery, incrementArgs...)
+		if err != nil {
+			log.Printf("ERROR: Failed to query database %s: %s", dbConfig.Name, err)
+		} else {
+			defer rows.Close()
 
-		for rows.Next() {
-			// Go through each row retrieved
-			var (
-				tableName  string
-				tableCount int
-			)
+			for rows.Next() {
+				// Go through each row retrieved
+				var (
+					tableName  string
+					tableCount int
+				)
 
-			// Assign the values to vars
-			err := rows.Scan(&tableName, &tableCount)
-			if err != nil {
-				log.Printf("ERROR: Failed to obtain values in database %s for table %s: %s", dbConfig.Name, tableName, err)
-			} else {
-				// Set the count for the table key in the Increment map
-				countCollection.Increment[tableName] = tableCount
+				// Assign the values to vars
+				err := rows.Scan(&tableName, &tableCount)
+				if err != nil {
+					log.Printf("ERROR: Failed to obtain values in database %s for table %s: %s", dbConfig.Name, tableName, err)
+				} else {
+					// Set the count for the table key in the Increment map
+					countCollection.Increment[tableName] = tableCount
 
-				log.Printf("INFO: Obtained value in database %s for table %s with count %d", dbConfig.Name, tableName, tableCount)
-			}
+					log.Printf("INFO: Obtained value in database %s for table %s with count %d", dbConfig.Name, tableName, tableCount)
+				}
 
-			// If there were any errors, output
-			err = rows.Err()
-			if err != nil {
-				log.Printf("ERROR: Row failures for database %s: %s", dbConfig.Name, err)
+				// If there were any errors, output
+				err = rows.Err()
+				if err != nil {
+					log.Printf("ERROR: Row failures for database %s: %s", dbConfig.Name, err)
+				}
 			}
 		}
 	}
 
-	// Query for all of the row count tables
-	rows, err = db.Query(rowQuery, rowArgs...)
-	if err != nil {
-		log.Printf("ERROR: Failed to query database %s: %s", dbConfig.Name, err)
-	} else {
-		defer rows.Close()
+	if rowQuery != "" && len(rowArgs) > 0 {
+		// If the number of row tables isn't empty, query
+		// Query for all of the row count tables
+		rows, err := db.Query(rowQuery, rowArgs...)
+		if err != nil {
+			log.Printf("ERROR: Failed to query database %s: %s", dbConfig.Name, err)
+		} else {
+			defer rows.Close()
 
-		for rows.Next() {
-			// Go through each row retrieved
-			var (
-				tableName  string
-				tableCount int
-			)
+			for rows.Next() {
+				// Go through each row retrieved
+				var (
+					tableName  string
+					tableCount int
+				)
 
-			// Assign the values to vars
-			err := rows.Scan(&tableName, &tableCount)
-			if err != nil {
-				log.Printf("ERROR: Failed to obtain values in database %s for table %s: %s", dbConfig.Name, tableName, err)
-			} else {
-				// Set the count for the table key in the Row map
-				countCollection.Row[tableName] = tableCount
+				// Assign the values to vars
+				err := rows.Scan(&tableName, &tableCount)
+				if err != nil {
+					log.Printf("ERROR: Failed to obtain values in database %s for table %s: %s", dbConfig.Name, tableName, err)
+				} else {
+					// Set the count for the table key in the Row map
+					countCollection.Row[tableName] = tableCount
 
-				log.Printf("INFO: Obtained value in database %s for table %s with count %d", dbConfig.Name, tableName, tableCount)
-			}
+					log.Printf("INFO: Obtained value in database %s for table %s with count %d", dbConfig.Name, tableName, tableCount)
+				}
 
-			// If there were any errors, output
-			err = rows.Err()
-			if err != nil {
-				log.Printf("ERROR: Row failures for database %s: %s", dbConfig.Name, err)
+				// If there were any errors, output
+				err = rows.Err()
+				if err != nil {
+					log.Printf("ERROR: Row failures for database %s: %s", dbConfig.Name, err)
+				}
 			}
 		}
 	}
